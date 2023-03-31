@@ -50,6 +50,8 @@ func TestSignImageSuccess(t *testing.T) {
 	// Sign the image
 	res, err := signer.SignImage(imageRef)
 
+	fmt.Println("**********")
+	fmt.Println(res)
 	// Verify the results
 	assert.Nil(t, err)
 	assert.Nil(t, res.File())
