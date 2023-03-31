@@ -412,6 +412,7 @@ func (s *Signer) VerifyImages(refs ...string) (*sync.Map, error) {
 					reference: parsedRef.String(),
 					signature: repoDigestToSig(parsedRef.Context(), digest),
 				},
+				file: nil,
 			}
 
 			res.Store(ref, obj)
