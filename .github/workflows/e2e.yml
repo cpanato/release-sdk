@@ -30,7 +30,7 @@ jobs:
         id: test-image
         with:
           base-image: scratch
-          image: test
+          image: test-release-sdk
           oci: true
 
       - name: Push test image to local registry
