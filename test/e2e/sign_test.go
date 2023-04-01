@@ -90,7 +90,7 @@ func TestSignImageSuccess(t *testing.T) {
 	assert.Contains(t, response, "-----END CERTIFICATE-----")
 	assert.Contains(t, response, fmt.Sprintf(`"mediaType":"%s"`, ociManifestType))
 
-	signed, err := signer.IsImageSigned(imageRef)
+	signed, err = signer.IsImageSigned(imageRef)
 	require.Nil(t, err)
 	assert.True(t, signed)
 
