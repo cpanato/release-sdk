@@ -339,7 +339,9 @@ func (s *Signer) VerifyImages(refs ...string) (*sync.Map, error) {
 			continue
 		}
 
+		fmt.Println(">>>>>STEP 0")
 		unknownRefs = append(unknownRefs, ref)
+		fmt.Println(unknownRefs)
 	}
 
 	if len(unknownRefs) == 0 {
@@ -373,14 +375,19 @@ func (s *Signer) VerifyImages(refs ...string) (*sync.Map, error) {
 			logrus.Errorf("Interface conversion failed: key is not a string: %v", key)
 			return false
 		}
+
 		isSigned, ok := value.(bool)
 		if !ok {
 			logrus.Errorf("Interface conversion failed: value is not a bool: %v", value)
 			return false
 		}
+		fmt.Println(">>>>>STEP 1.0")
+		fmt.Println(isSigned)
 
 		if isSigned {
+			fmt.Println("append images")
 			unknownRefs = append(unknownRefs, ref)
+			fmt.Println(unknownRefs)
 		}
 
 		fmt.Println(">>>>>STEP 1.1")
@@ -391,7 +398,7 @@ func (s *Signer) VerifyImages(refs ...string) (*sync.Map, error) {
 	t := throttler.New(int(s.options.MaxWorkers), len(unknownRefs))
 	for _, ref := range unknownRefs {
 		go func(ref string) {
-			fmt.Println(">>>>>STEP 2")
+			fmt.Println(">>>>>STEP 2.1")
 			fmt.Println(ref)
 			ctx, cancel := s.options.context()
 			defer cancel()
