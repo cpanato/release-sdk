@@ -305,6 +305,8 @@ func (s *Signer) VerifyImage(reference string) (*SignedObject, error) {
 		return nil, fmt.Errorf("verify image: %w", err)
 	}
 
+	fmt.Println(">>>>LOAD 1")
+	fmt.Println(reference)
 	o, ok := res.Load(reference)
 	if !ok {
 		// Probably not signed
@@ -331,6 +333,8 @@ func (s *Signer) VerifyImages(refs ...string) (*sync.Map, error) {
 	for _, ref := range refs {
 		item := s.signedObjs.Get(ref)
 		if item != nil {
+			fmt.Println(">>>>>STORE 1")
+			fmt.Println(ref, item.Value())
 			res.Store(ref, item.Value())
 			continue
 		}
@@ -419,6 +423,8 @@ func (s *Signer) VerifyImages(refs ...string) (*sync.Map, error) {
 				file: nil,
 			}
 
+			fmt.Println(">>>>>STORE 2")
+			fmt.Println(ref, obj)
 			res.Store(ref, obj)
 			s.signedObjs.Set(ref, obj, ttlcache.DefaultTTL)
 			t.Done(nil)
