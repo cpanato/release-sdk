@@ -384,7 +384,7 @@ func (s *Signer) VerifyImages(refs ...string) (*sync.Map, error) {
 		fmt.Println(">>>>>STEP 1.0")
 		fmt.Println(isSigned)
 
-		if isSigned {
+		if !isSigned {
 			fmt.Println("append images")
 			unknownRefs = append(unknownRefs, ref)
 			fmt.Println(unknownRefs)
