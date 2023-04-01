@@ -48,13 +48,16 @@ func TestSignImageSuccess(t *testing.T) {
 	require.False(t, signed)
 
 	// Sign the image
+	fmt.Println("1**********")
+	fmt.Println(imageRef)
 	res, err := signer.SignImage(imageRef)
 
 	fmt.Println("**********")
 	fmt.Println(res)
 	// Verify the results
 	assert.Nil(t, err)
-	// assert.Nil(t, res.File())
+	// require.NotNil(t, res)
+	assert.Nil(t, res.File())
 	image := res.Image()
 	assert.NotNil(t, image)
 	assert.Equal(t, imageRef, image.Reference())
@@ -82,11 +85,12 @@ func TestSignImageSuccess(t *testing.T) {
 	require.Nil(t, err)
 
 	response := string(body)
+	fmt.Println(response)
 	assert.Contains(t, response, "-----BEGIN CERTIFICATE-----")
 	assert.Contains(t, response, "-----END CERTIFICATE-----")
 	assert.Contains(t, response, fmt.Sprintf(`"mediaType":"%s"`, ociManifestType))
 
-	signed, err = signer.IsImageSigned(imageRef)
+	signed, err := signer.IsImageSigned(imageRef)
 	require.Nil(t, err)
 	assert.True(t, signed)
 
