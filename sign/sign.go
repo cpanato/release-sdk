@@ -365,6 +365,7 @@ func (s *Signer) VerifyImages(refs ...string) (*sync.Map, error) {
 		return nil, fmt.Errorf("verify if images are signed: %w", err)
 	}
 	unknownRefs = []string{}
+	fmt.Println(">>>>>STEP 1")
 	imagesSigned.Range(func(key, value any) bool {
 		ref, ok := key.(string)
 		if !ok {
@@ -381,12 +382,16 @@ func (s *Signer) VerifyImages(refs ...string) (*sync.Map, error) {
 			unknownRefs = append(unknownRefs, ref)
 		}
 
+		fmt.Println(">>>>>STEP 1.1")
 		return true
 	})
 
+	fmt.Println(">>>>>STEP 2")
 	t := throttler.New(int(s.options.MaxWorkers), len(unknownRefs))
 	for _, ref := range unknownRefs {
 		go func(ref string) {
+			fmt.Println(">>>>>STEP 2")
+			fmt.Println(ref)
 			ctx, cancel := s.options.context()
 			defer cancel()
 
@@ -395,7 +400,7 @@ func (s *Signer) VerifyImages(refs ...string) (*sync.Map, error) {
 				t.Done(fmt.Errorf("verify image reference: %s: %w", ref, err))
 				return
 			}
-
+			fmt.Println(">>>>>STEP 2.2")
 			var parsedRef name.Reference
 			item := s.parsedRefs.Get(ref)
 			if item != nil {
@@ -408,6 +413,7 @@ func (s *Signer) VerifyImages(refs ...string) (*sync.Map, error) {
 				}
 			}
 
+			fmt.Println(">>>>>STEP 2.3")
 			digest, err := s.impl.Digest(parsedRef.String())
 			if err != nil {
 				t.Done(fmt.Errorf("getting the reference digest for %s: %w", ref, err))
@@ -435,12 +441,14 @@ func (s *Signer) VerifyImages(refs ...string) (*sync.Map, error) {
 		}
 	}
 
+	fmt.Println(">>>>>STEP 3")
 	s.log().Debug("Done verifying references")
 
 	if err := t.Err(); err != nil {
 		return res, fmt.Errorf("verifying references: %w", err)
 	}
 
+	fmt.Println(">>>>>STEP 4")
 	return res, nil
 }
 
