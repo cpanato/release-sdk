@@ -34,8 +34,8 @@ import (
 
 const (
 	ociManifestType   = "application/vnd.oci.image.manifest.v1+json"
-	registry          = "localhost:5000"
-	imageName         = "test"
+	registry          = "ttl.sh"
+	imageName         = "test-release-sdk"
 	registryWithImage = registry + "/" + imageName
 	imageRef          = registryWithImage + ":latest"
 )
