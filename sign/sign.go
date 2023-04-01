@@ -121,7 +121,7 @@ func (s *Signer) SignImage(reference string) (object *SignedObject, err error) {
 
 // SignImageWithOptions can be used to sign any provided container image
 // reference by using the provided custom options.
-func (s *Signer) SignImageWithOptions(options *Options, reference string) (object *SignedObject, err error) {
+func (s *Signer) SignImageWithOptions(options *Options, reference string) (*SignedObject, error) {
 	s.log().Infof("Signing reference: %s", reference)
 
 	// Ensure options to sign are correct
@@ -183,15 +183,19 @@ func (s *Signer) SignImageWithOptions(options *Options, reference string) (objec
 	// After signing, registry consistency may not be there right
 	// away. Retry the image verification if it fails
 	// ref: https://github.com/kubernetes-sigs/promo-tools/issues/536
+	var object *SignedObject
 	waitErr := wait.ExponentialBackoff(wait.Backoff{
 		Duration: 500 * time.Millisecond,
 		Factor:   1.5,
 		Steps:    int(options.MaxRetries),
 	}, func() (bool, error) {
+		fmt.Println(">>>>VERIFY IMAGE>>>>>")
+		fmt.Println(images[0])
 		object, err = s.VerifyImage(images[0])
+		fmt.Println(">>>>VERIFY IMAGE POST>>>>>")
+		fmt.Println(object)
 		if err != nil {
-			err = fmt.Errorf("verifying reference %s: %w", images[0], err)
-			return false, nil
+			return false, fmt.Errorf("verifying reference %s: %w", images[0], err)
 		}
 		return true, nil
 	})
@@ -200,7 +204,7 @@ func (s *Signer) SignImageWithOptions(options *Options, reference string) (objec
 		return nil, fmt.Errorf("retrying image verification: %w", waitErr)
 	}
 
-	return object, err
+	return object, nil
 }
 
 // SignFile can be used to sign any provided file path by using keyless
