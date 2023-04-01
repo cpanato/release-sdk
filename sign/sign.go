@@ -343,6 +343,7 @@ func (s *Signer) VerifyImages(refs ...string) (*sync.Map, error) {
 	}
 
 	if len(unknownRefs) == 0 {
+		fmt.Println(">>>>>STEP 1- All references already available in cache")
 		s.log().Debug("All references already available in cache")
 		return res, nil
 	}
@@ -448,7 +449,7 @@ func (s *Signer) VerifyImages(refs ...string) (*sync.Map, error) {
 		return res, fmt.Errorf("verifying references: %w", err)
 	}
 
-	fmt.Println(">>>>>STEP 4")
+	fmt.Println(">>>>>STEP 4	")
 	return res, nil
 }
 
