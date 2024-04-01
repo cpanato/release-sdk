@@ -391,6 +391,9 @@ func (s *Signer) VerifyImages(refs ...string) (*sync.Map, error) {
 	// 	}
 	// }
 
+	fmt.Println("<<<<<")
+	fmt.Println(unknownRefs)
+
 	t := throttler.New(int(s.options.MaxWorkers), len(unknownRefs))
 	for _, ref := range unknownRefs {
 		go func(ref string) {
