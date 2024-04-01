@@ -360,7 +360,7 @@ func (s *Signer) VerifyImages(refs ...string) (*sync.Map, error) {
 	if err != nil {
 		return nil, fmt.Errorf("verify if images are signed: %w", err)
 	}
-	unknownRefsTemp := []string{}
+	unknownRefs = []string{}
 	imagesSigned.Range(func(key, value any) bool {
 		ref, ok := key.(string)
 		if !ok {
@@ -374,25 +374,25 @@ func (s *Signer) VerifyImages(refs ...string) (*sync.Map, error) {
 		}
 
 		if isSigned {
-			unknownRefsTemp = append(unknownRefsTemp, ref)
+			unknownRefs = append(unknownRefs, ref)
 		}
 
 		return true
 	})
 
 	// join unknow refs and remove duplicates
-	unknownRefs = append(unknownRefs, unknownRefsTemp...)
-	keys := make(map[string]bool)
-	updatedUnknownRefs := []string{}
-	for _, item := range unknownRefs {
-		if _, value := keys[item]; !value {
-			keys[item] = true
-			updatedUnknownRefs = append(updatedUnknownRefs, item)
-		}
-	}
+	// unknownRefs = append(unknownRefs, unknownRefsTemp...)
+	// keys := make(map[string]bool)
+	// updatedUnknownRefs := []string{}
+	// for _, item := range unknownRefs {
+	// 	if _, value := keys[item]; !value {
+	// 		keys[item] = true
+	// 		updatedUnknownRefs = append(updatedUnknownRefs, item)
+	// 	}
+	// }
 
 	t := throttler.New(int(s.options.MaxWorkers), len(unknownRefs))
-	for _, ref := range updatedUnknownRefs {
+	for _, ref := range unknownRefs {
 		go func(ref string) {
 			ctx, cancel := s.options.context()
 			defer cancel()
